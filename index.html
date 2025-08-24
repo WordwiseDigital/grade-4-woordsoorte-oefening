@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woordsoorte Skattejag - Graad 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            color: #4a4a4a;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .treasure-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .scoreboard {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #e74c3c);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(10px);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .english-hint {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .gems {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .gem {
+            font-size: 1.5em;
+            margin: 0 2px;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .gem.earned {
+            opacity: 1;
+            animation: sparkle 0.6s ease;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3) rotate(180deg); }
+        }
+
+        .final-screen {
+            display: none;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .final-score {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .multiple-choice {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-family: inherit;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .choice-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="treasure-icon">🏴‍☠️</div>
+            <h1 class="title">Woordsoorte Skattejag!</h1>
+            <p>Help die seerower om die woordsoorte-skat te vind!</p>
+        </div>
+
+        <div class="scoreboard">
+            <div class="score-item">
+                <div class="score-number" id="correct-count">0</div>
+                <div>Korrek</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="current-question">1</div>
+                <div>van 20</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="percentage">0%</div>
+                <div>Telling</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="gems" id="gems-container">
+            <!-- Gems will be generated here -->
+        </div>
+
+        <div id="question-container">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <div class="final-screen" id="final-screen">
+            <div class="celebration">🎉</div>
+            <h2>Baie goed gedaan!</h2>
+            <div class="final-score" id="final-score"></div>
+            <p id="final-message"></p>
+            <button class="restart-btn" onclick="restartQuiz()">Probeer weer!</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: 'Watter woordsoort is <strong>"hond"</strong> in die sin: Die hond blaf hard.',
+                hint: 'Identify the part of speech of "hond".',
+                answer: 'selfstandige naamwoord',
+                choices: ['selfstandige naamwoord', 'werkwoord', 'byvoeglike naamwoord', 'voornaamwoord'],
+                type: 'multiple'
+            },
+            {
+                question: 'Kies die regte <strong>lidwoord</strong>: ___ appel is rooi.',
+                hint: 'Choose the correct article.',
+                answer: "'n",
+                alternatives: ['n'],
+                type: 'input'
+            },
+            {
+                question: 'Kies die <strong>eienaam</strong>:',
+                hint: 'Pick the proper noun.',
+                answer: 'Kaapstad',
+                choices: ['stad', 'Kaapstad', 'skool'],
+                type: 'multiple'
+            },
+            {
+                question: 'Vervang <strong>Karabo</strong> met \'n <strong>voornaamwoord</strong>: Karabo lees.',
+                hint: 'Replace the noun with a pronoun.',
+                answer: 'Hy',
+                alternatives: ['hy'],
+                type: 'input'
+            },
+            {
+                question: 'Vul die <strong>besitlike voornaamwoord</strong> in: Dit is ___ boek. (ek)',
+                hint: 'Fill the possessive pronoun ("my").',
+                answer: 'my',
+                type: 'input'
+            },
+            {
+                question: 'Watter woord is die <strong>werkwoord</strong> in: Die kinders speel buite.',
+                hint: 'Identify the verb.',
+                answer: 'speel',
+                type: 'input'
+            },
+            {
+                question: 'Wat is die <strong>byvoeglike naamwoord</strong> in: Die groot hond hardloop.',
+                hint: 'Which word describes the noun?',
+                answer: 'groot',
+                type: 'input'
+            },
+            {
+                question: 'Dui die <strong>bywoord van tyd</strong> aan: Ons lees vandag.',
+                hint: 'Adverb of time.',
+                answer: 'vandag',
+                type: 'input'
+            },
+            {
+                question: 'Dui die <strong>bywoord van plek</strong> aan: Die kat slaap binne.',
+                hint: 'Adverb of place.',
+                answer: 'binne',
+                type: 'input'
+            },
+            {
+                question: 'Dui die <strong>bywoord van wyse</strong> aan: Hy praat sag.',
+                hint: 'Adverb of manner.',
+                answer: 'sag',
+                type: 'input'
+            },
+            {
+                question: 'Watter woord is die <strong>voorsetsel</strong> in: Die boek lê op die tafel.',
+                hint: 'Preposition.',
+                answer: 'op',
+                type: 'input'
+            },
+            {
+                question: 'Dui die <strong>voegwoord</strong> aan in: Ek hou van koek en roomys.',
+                hint: 'Conjunction (joins words/clauses).',
+                answer: 'en',
+                type: 'input'
+            },
+            {
+                question: 'Watter woord is die <strong>tussenwerpsel</strong> in: Ai! Ek het seergekry.',
+                hint: 'Interjection.',
+                answer: 'Ai!',
+                alternatives: ['Ai', 'ai!', 'ai'],
+                type: 'input'
+            },
+            {
+                question: 'Watter woord is die <strong>telwoord</strong> in: Hy het drie appels.',
+                hint: 'Numeral (cardinal).',
+                answer: 'drie',
+                alternatives: ['drie (hoofgetal)'],
+                type: 'input'
+            },
+            {
+                question: 'Watter woord is die <strong>rangtelwoord</strong> in: Sy sit in die tweede ry.',
+                hint: 'Ordinal number.',
+                answer: 'tweede',
+                alternatives: ['tweede (rangtelwoord)'],
+                type: 'input'
+            },
+            {
+                question: 'Skryf die twee <strong>lidwoorde</strong> van Afrikaans.',
+                hint: 'The two articles.',
+                answer: 'die; \'n',
+                alternatives: ['die, \'n', 'die en \'n', '\'n; die', '\'n, die', 'die \'n'],
+                type: 'input'
+            },
+            {
+                question: 'Kies die <strong>byvoeglike naamwoord</strong>: Ons het ___ koek gebak.',
+                hint: 'Choose the adjective.',
+                answer: 'lekker',
+                choices: ['lekker', 'by'],
+                type: 'multiple'
+            },
+            {
+                question: 'Watter woordsoort is <strong>"Hulle"</strong> in: Hulle lag hard.',
+                hint: 'Pronoun ("they").',
+                answer: 'voornaamwoord',
+                alternatives: ['voornaamwoord (persoonlik)', 'persoonlike voornaamwoord'],
+                type: 'input'
+            },
+            {
+                question: 'Vervang <strong>die meisies</strong> met \'n <strong>voornaamwoord</strong>: Die meisies dans.',
+                hint: 'Replace the noun phrase with a pronoun.',
+                answer: 'Hulle',
+                alternatives: ['hulle'],
+                type: 'input'
+            },
+            {
+                question: 'Kies die <strong>abstrakte selfstandige naamwoord</strong>:',
+                hint: 'Abstract noun.',
+                answer: 'vreugde',
+                choices: ['vreugde', 'tafel', 'Jan'],
+                type: 'multiple'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let correctCount = 0;
+        let selectedChoice = null;
+
+        function initializeGems() {
+            const gemsContainer = document.getElementById('gems-container');
+            gemsContainer.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const gem = document.createElement('span');
+                gem.className = 'gem';
+                gem.innerHTML = '💎';
+                gem.id = `gem-${i}`;
+                gemsContainer.appendChild(gem);
+            }
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            const questionContainer = document.getElementById('question-container');
+            
+            let choicesHTML = '';
+            if (question.type === 'multiple') {
+                choicesHTML = `
+                    <div class="multiple-choice">
+                        ${question.choices.map(choice => 
+                            `<button class="choice-btn" onclick="selectChoice('${choice}')">${choice}</button>`
+                        ).join('')}
+                    </div>
+                `;
+            } else {
+                choicesHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Skryf jou antwoord hier...">`;
+            }
+            
+            questionContainer.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Vraag ${currentQuestion + 1}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="english-hint">${question.hint}</div>
+                    ${choicesHTML}
+                    <button class="submit-btn" onclick="checkAnswer()">Kontroleer Antwoord</button>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            `;
+
+            // Add enter key listener for input fields
+            const input = document.getElementById('answer-input');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkAnswer();
+                    }
+                });
+                input.focus();
+            }
+
+            updateProgress();
+        }
+
+        function selectChoice(choice) {
+            selectedChoice = choice;
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent === choice) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswer() {
+            const question = questions[currentQuestion];
+            let userAnswer = '';
+            
+            if (question.type === 'multiple') {
+                userAnswer = selectedChoice;
+                if (!userAnswer) {
+                    alert('Kies asseblief \'n antwoord!');
+                    return;
+                }
+            } else {
+                const input = document.getElementById('answer-input');
+                userAnswer = input.value.trim();
+                if (!userAnswer) {
+                    alert('Skryf asseblief \'n antwoord!');
+                    return;
+                }
+            }
+            
+            const feedback = document.getElementById('feedback');
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            
+            // Check if answer is correct (including alternatives)
+            let isCorrect = false;
+            const possibleAnswers = [question.answer];
+            if (question.alternatives) {
+                possibleAnswers.push(...question.alternatives);
+            }
+            
+            isCorrect = possibleAnswers.some(answer => 
+                answer.toLowerCase().replace(/['"]/g, '') === userAnswer.toLowerCase().replace(/['"]/g, '')
+            );
+            
+            if (isCorrect) {
+                correctCount++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `🎉 Korrek! Die antwoord is "${question.answer}".`;
+                
+                // Light up the gem
+                const gem = document.getElementById(`gem-${currentQuestion}`);
+                gem.classList.add('earned');
+            } else {
+                feedback.className = 'feedback incorrect';
+                let explanation = '';
+                
+                // Add specific explanations for wrong answers
+                switch(currentQuestion) {
+                    case 0:
+                        explanation = ' "Hond" is \'n ding/dier wat jy kan sien en aanraak.';
+                        break;
+                    case 1:
+                        explanation = ' Ons gebruik "\'n" voor woorde wat begin met \'n medeklinker.';
+                        break;
+                    case 3:
+                        explanation = ' "Karabo" is \'n mansnaam, so ons vervang dit met "Hy".';
+                        break;
+                    case 5:
+                        explanation = ' "Speel" is wat die kinders doen - dit is die aksie. Die regte antwoord is "speel".';
+                        break;
+                    case 6:
+                        explanation = ' "Groot" beskryf hoe die hond lyk.';
+                        break;
+                    default:
+                        explanation = ` Probeer weer! Die regte antwoord is "${question.answer}".`;
+                }
+                
+                feedback.innerHTML = `❌ Nie korrek nie.${explanation}`;
+            }
+            
+            feedback.style.display = 'block';
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 3000);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            selectedChoice = null;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        function updateProgress() {
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('correct-count').textContent = correctCount;
+            
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('percentage').textContent = percentage + '%';
+            
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showFinalScreen() {
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            const questionContainer = document.getElementById('question-container');
+            const finalScreen = document.getElementById('final-screen');
+            
+            document.getElementById('final-score').textContent = `${correctCount} uit ${questions.length} korrek! (${percentage}%)`;
+            
+            let message = '';
+            let celebration = '';
+            
+            if (percentage >= 90) {
+                message = 'Uitstekend! Jy is \'n ware woordsoorte-seerower! 🏆';
+                celebration = '🎉🏆🎉';
+            } else if (percentage >= 75) {
+                message = 'Baie goed! Jy ken jou woordsoorte goed! 👍';
+                celebration = '🎉⭐🎉';
+            } else if (percentage >= 50) {
+                message = 'Goed gedaan! Oefen nog \'n bietjie en jy sal beter doen! 📚';
+                celebration = '👏📚👏';
+            } else {
+                message = 'Moenie moed opgee nie! Oefen meer en probeer weer! 💪';
+                celebration = '💪📖💪';
+            }
+            
+            document.getElementById('final-message').textContent = message;
+            document.querySelector('.celebration').textContent = celebration;
+            
+            questionContainer.style.display = 'none';
+            finalScreen.style.display = 'block';
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            correctCount = 0;
+            selectedChoice = null;
+            
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('final-screen').style.display = 'none';
+            
+            // Reset gems
+            document.querySelectorAll('.gem').forEach(gem => {
+                gem.classList.remove('earned');
+            });
+            
+            loadQuestion();
+        }
+
+        // Initialize the quiz
+        initializeGems();
+        loadQuestion();
+    </script>
+</body>
+</html>
